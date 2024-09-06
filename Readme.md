@@ -1,5 +1,6 @@
 # Node js
 [GitHub](https://github.com/hamitmizrak/offline_nodejs)
+[Mongo Db Login](https://account.mongodb.com/account/login)
 ---
 
 ## Teknolojiler
@@ -159,6 +160,8 @@ npm search express
 npm install express 
 npm install express --save
 
+npm install mongodb
+
 npm install typescript 
 npm install typescript express
 npm install typescript@5.5.4 --save
@@ -271,8 +274,15 @@ Npm bize hızlı kodlar yazmamız için gereken alt yapıyı sunar.
 
 
 
-## Node JS
+##  Mongo DB
 ```sh
+
+npm install mongodb
+
+username:  hamitmizrak
+password:  cNrT66n13oQYtkps
+
+mongodb+srv://hamitmizrak:cNrT66n13oQYtkps@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster
 
 ```
 ---
