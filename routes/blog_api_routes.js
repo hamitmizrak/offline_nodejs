@@ -12,6 +12,13 @@ Aşağıdaki kodta Exress.js yardımıyla Router  nesnesini farklı HTTP istekle
 // Express Import
 const express = require("express");
 
+// Express için Log 
+const morgan = require('morgan');
+const app = express(); // Express app oluştur.
+// Morgan'ı Express.js uygulamasında kullanalım.
+// app.use(morgan('dev')); //dev: kısa ve renkli loglar göster
+app.use(morgan('combined')); //dev: uzun ve renkli loglar göster
+
 // Router Import
 const router = express.Router();
 
