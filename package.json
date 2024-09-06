@@ -1,0 +1,46 @@
+{
+  "name": "offline_node_blog",
+  "version": "1.0.0",
+  "description": "Html5,css3,bootstrap5, js, es, nodejs, jquery, express,nodemon",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "nodemon": "nodemon index.js",
+    "nodemon_q": "nodemon -q index.js",
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hamitmizrak/offline_nodejs.git"
+  },
+  "keywords": [
+    "Html5",
+    "css3",
+    "bootstrap5",
+    "js",
+    "es",
+    "ejs",
+    "nodejs",
+    "nodemon",
+    "jquery",
+    "express"
+  ],
+  "author": "Yüksek Bilgisayar Mühendisi Hamit Mızrak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hamitmizrak/offline_nodejs/issues"
+  },
+  "homepage": "https://github.com/hamitmizrak/offline_nodejs#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.6.1",
+    "morgan": "^1.10.0",
+    "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
