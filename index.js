@@ -14,12 +14,14 @@ const express = require("express");
 // Mongoose Import
 const mongoose = require("mongoose");
 
+///////////////////////////////////////////////////
 // bodyParser Import
 const bodyParser = require("body-parser");
 
 // App Import
 const app = express(); // Express app oluştur.
 
+///////////////////////////////////////////////////
 // Express için Log 
 const morgan = require('morgan');
 
@@ -29,6 +31,67 @@ const morgan = require('morgan');
 // app.use(morgan('dev')); //dev: kısa ve renkli loglar göster
 app.use(morgan('combined')); //dev: uzun ve renkli loglar göster
 
+///////////////////////////////////////////////////
+// compression:
+// npm install compression
+// Gzip : Verilerin sıkıştırılmasıyla performansı artırmak
+// ve ağ üzerinde sayfaya daha hızlı erişimi sağlar
+// Tüm Http cevaplarını sıkıştırarak gönderilmesini sağlar.
+// const compression = require('compression');
+// app.use(compression);
+
+///////////////////////////////////////////////////
+// Rate Limiting (İstek Sınırlamasını):
+// npm install express-rate-limit
+// DDoS saldırlarına karşı korumayı sağlamak ve sistem performansını artırmak içindir.
+// Gelen istekleri sınırlayabiliriz.
+
+// Her 15 dakika içinde en fazla 100 istek atılabilinir.
+const rateLimit=require('express-rate-limit');
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 dakika
+    max: 100, // buy süre zarfında en fazla bu kadar isterk atabilirsiniz.
+    message: "İstek sayısı fazla yapıldı, lütfen biraz sonra tekrar deneyiniz"
+});
+
+app.use("/api/", limiter)
+
+///////////////////////////////////////////////////
+// CORS
+// npm install cors
+// CORS (Cross-Origin Resource Sharing)
+// Eğer API'niz başka portlardan da erişim sağlanacaksa bunu açmamız gerekiyor.
+ 
+const cors= require('cors');
+app.use(cors());
+
+///////////////////////////////////////////////////
+// CSRF 
+/*
+CSRF (Cross-Site Request Forgery):  Türkçesi Siteler Arası istek Sahteciliğidir.
+Bu saldırı türünde amaç, kötü niyetli bir kullanıcının, başka bir kullanının haberi olmadan onun adına istekler göndererek
+işlem yapması halidir.
+Kullanımı: Genellikle kullanıcı, başka bir sitede oturum açmışken, saldırganın tasarladğo kötü niyetli sitelerle veya bağlantılarla
+istem dışı işlemler yapmasına saldırgan yönlendirir.
+Kullanıcı browser üzerinden oturum açtığında ve kimlik doğrulama bilgilerie sahip olduğu sitelerde yapılır.
+
+*/
+// npm install csurf
+const csrf = require('csuf');
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
+const  csrfProtections = csrf({cookie: true});
+
+// CSRF tokenını form gönderiminde kullanmak üzere
+app.get("/form", csrfProtections, (request,response) => {
+response.render('send', {csrfToken: request.csrfToken()})
+});
+
+// Form gönderimi sırasında CSRF korumasını aktif etmek içinde
+app.post("/process", csrfProtections, (request, response) =>{
+    response.send('CSRF (Cross-Site Request Forgery) ile Form başarıyla Gönderildi')
+})
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 // Mongo DB Bağlantısı
@@ -86,6 +149,12 @@ app.get("/", (request,response) => {
     //response.setHeader("Content-Type", "application/json");
     response.render("index");
 });
+
+
+// 404 Hata Sayfasını 
+app.use((request, response, next) => {
+    response.status(404).render("404", {url: request.originalUrl})
+})
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
