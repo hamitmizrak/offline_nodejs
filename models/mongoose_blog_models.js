@@ -45,7 +45,7 @@ const BlogPostSchema = new mongoose.Schema(
     },
 
     // DATE
-    date: {
+    dateInformation: {
       type: String,
       default: Date.now(),
     },
