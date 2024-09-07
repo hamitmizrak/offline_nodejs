@@ -42,9 +42,9 @@
     <!-- Blog Form -->
     <!-- <form id="blog-form"> -->
     <!-- CSRF (Cross-Site Request Forgery):  action,POST için eklendi -->
-    <form action="/process" method="POST" id="blog-form">
+    <form action="/blog" method="POST" id="blog-form">
       <!-- CSRF (Cross-Site Request Forgery) -->
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>">
 
       <!-- BLOG HEADER -->
       <div class="form-group mb-3">

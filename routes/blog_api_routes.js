@@ -66,7 +66,8 @@ router.post("/", async (request, response) => {
     response.status(200).json(create);
 
     // Ekleme başarılı
-    console.log("Ekleme Başarılı");
+    console.warn("Ekleme Başarılı");
+    console.warn(create);
   } catch (err) {
     handleError(
       err,

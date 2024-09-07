@@ -55,7 +55,7 @@ $(document).ready(function () {
   // blog Ekleme
   $("#blog-form").on("submit", function (event) {
     // Browser'a otomatik olarak herhangi bir veri göndermesini kısıtkadım.
-    //event.preventDefault(); //bunu kapatmazsam csrf çalışmıyordu
+     event.preventDefault(); //bunu kapatmazsam csrf çalışmıyordu
 
     // Blog Form'da verileri almak için
     const blogDataCreate = {
@@ -64,7 +64,10 @@ $(document).ready(function () {
       content: $("#content").val(),
       author: $("#author").val(),
       tags: $("#tags").val(),
+      _csrf: $("input[name='_csrf']").val() // CSRF token'ı AJAX isteğine dahil ediyoruz
     };
+
+    console.warn("sonuç:"+blogDataCreate._csrf); // csrf ekle
 
     // Aldığım verileri kaydetmek (AJAX)
     $.ajax({
@@ -81,7 +84,7 @@ $(document).ready(function () {
         //reset()
       }, //end success
       error: function (xhr, status, error) {
-        console.log("Blog Ekleme işlemi başarısız:", error); // Hata mesajını göster
+        console.error("Blog Ekleme işlemi başarısız:", error); // Hata mesajını göster
       },
     }); //end submit ajax
   }); // end Blog Add submit
