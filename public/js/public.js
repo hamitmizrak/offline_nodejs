@@ -55,7 +55,7 @@ $(document).ready(function () {
   // blog Ekleme
   $("#blog-form").on("submit", function (event) {
     // Browser'a otomatik olarak herhangi bir veri göndermesini kısıtkadım.
-    event.preventDefault();
+    //event.preventDefault(); //bunu kapatmazsam csrf çalışmıyordu
 
     // Blog Form'da verileri almak için
     const blogDataCreate = {
