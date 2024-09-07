@@ -12,12 +12,16 @@ Aşağıdaki kodta Exress.js yardımıyla Router  nesnesini farklı HTTP istekle
 // Express Import
 const express = require("express");
 
-// Express için Log 
-const morgan = require('morgan');
-const app = express(); // Express app oluştur.
+// Express için Log
+const morgan = require("morgan"); //44
+
+// Express App (Morgan için açmak)
+const app = express(); // Express app oluştur. 44
+
+// Morgan Aktifleştirmek
 // Morgan'ı Express.js uygulamasında kullanalım.
 // app.use(morgan('dev')); //dev: kısa ve renkli loglar göster
-app.use(morgan('combined')); //dev: uzun ve renkli loglar göster
+app.use(morgan("combined")); //dev: uzun ve renkli loglar göster 44
 
 // Router Import
 const router = express.Router();
@@ -81,8 +85,37 @@ router.get("/", async (request, response) => {
     // MongoDB üzerinden get isteği attık
     const find = await MongooseBlogModelApi.find();
 
+    // Tarihi Bizim istediğimiz şekilde yazalım.
+    const formattedDateTurkish = await Promise.all(
+      find.map(async (temp) => {
+        // Görüntüleme sayısını artırma
+        await temp.incrementViews();
+
+        return {
+          ...temp._doc, // Tüm blog verilerini kopyala
+          dateInformation: new Date(temp.createdAt).toLocaleString("tr-TR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+            hour: "2-digit",
+            second: "2-digit",
+          }), //end createdAt
+        }; //end return
+      })
+    ); //end formattedDateTurkish
+
+    // Her blog sayfasına bakıldıkça sayacçı 1 artır
+    // const viewCounter = await Promise.all(
+    //   find.map(async (blog) => {
+    //     await blog.incrementViews(); // Görüntüleme sayısını artır
+    //     return blog;
+    //   }) // end map
+    // ); //end viewCounter
     // Dönüş değeri
-    response.status(200).json(find);
+    //
+
+    response.status(200).json(formattedDateTurkish);
 
     // Listeleme başarılı
     console.log("Listeleme Başarılı");
