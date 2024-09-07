@@ -32,7 +32,9 @@ $(document).ready(function () {
                     <td>${item.content}</td>
                     <td>${item.author}</td>
                     <td>${item.tags}</td>
-                    <td>${item.date}</td>
+                    <td>${item.views}</td>
+                    <td>${item.status}</td>
+                    <td>${item.dateInformation}</td>
 
                     <td>
                         <button class="btn btn-primary edit-btn"><i class="fa-solid fa-wrench"></i></button>
