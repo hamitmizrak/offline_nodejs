@@ -338,6 +338,8 @@ password:  cNrT66n13oQYtkps
 
 mongodb+srv://hamitmizrak:cNrT66n13oQYtkps@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster
 
+https://cloud.mongodb.com/v2/66db445daaa24671ea000150#/metrics/replicaSet/66db45178fd0f77237a36be8/explorer/test/mongoblogmodels/find
+
 ```
 ---
 

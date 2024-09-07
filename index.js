@@ -31,6 +31,7 @@ const morgan = require('morgan');
 // app.use(morgan('dev')); //dev: kısa ve renkli loglar göster
 app.use(morgan('combined')); //dev: uzun ve renkli loglar göster
 
+
 ///////////////////////////////////////////////////
 // compression:
 // npm install compression
@@ -54,7 +55,7 @@ const limiter = rateLimit({
     message: "İstek sayısı fazla yapıldı, lütfen biraz sonra tekrar deneyiniz"
 });
 
-app.use("/api/", limiter)
+app.use("/blog/", limiter)
 
 ///////////////////////////////////////////////////
 // CORS
@@ -64,6 +65,7 @@ app.use("/api/", limiter)
  
 const cors= require('cors');
 app.use(cors());
+
 
 ///////////////////////////////////////////////////
 // CSRF 
@@ -77,21 +79,24 @@ Kullanıcı browser üzerinden oturum açtığında ve kimlik doğrulama bilgile
 
 */
 // npm install csurf
-const csrf = require('csuf');
+// npm install cookie-parser
+const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
-app.use(cookieParser());
 
+
+app.use(cookieParser());
 const  csrfProtections = csrf({cookie: true});
 
 // CSRF tokenını form gönderiminde kullanmak üzere
-app.get("/form", csrfProtections, (request,response) => {
-response.render('send', {csrfToken: request.csrfToken()})
+app.get("/", csrfProtections, (request, response) => {
+    response.render('index', { csrfToken: request.csrfToken() });
 });
 
 // Form gönderimi sırasında CSRF korumasını aktif etmek içinde
-app.post("/process", csrfProtections, (request, response) =>{
-    response.send('CSRF (Cross-Site Request Forgery) ile Form başarıyla Gönderildi')
-})
+app.post("/process", csrfProtections, (request, response) => {
+    response.send('CSRF (Cross-Site Request Forgery) ile Form başarıyla gönderildi');
+});
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 // Mongo DB Bağlantısı
@@ -172,6 +177,7 @@ netsh advfirewall firewall add rule name="Block TCP Port 1111" protocol=TCP dir=
 netsh advfirewall firewall add rule name="Block UDP Port 1111" protocol=UDP dir=in localport=1111 action=block
 
 */
+
 
 // Server Port 
 const port = 1111;
