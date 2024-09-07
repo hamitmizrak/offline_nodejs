@@ -11,9 +11,6 @@ console.info("index.js Server 1111 portunda ayağa kalktı");
 // Express Import
 const express = require("express");
 
-// Express için Log 
-const morgan = require('morgan');
-
 // Mongoose Import
 const mongoose = require("mongoose");
 
@@ -22,6 +19,10 @@ const bodyParser = require("body-parser");
 
 // App Import
 const app = express(); // Express app oluştur.
+
+// Express için Log 
+const morgan = require('morgan');
+
 
 // Morgan Aktifleştirmek
 // Morgan'ı Express.js uygulamasında kullanalım.
@@ -64,7 +65,7 @@ mongoose.connect(`${databaseCloudUrl}`)
 // MiddleWare(Orta Katmanlar)
 app.use(bodyParser.urlencoded({ extended:true }));
 app.use(bodyParser.json());
-app.use(bodyParser.static("public"));
+app.use(express.static("public"));
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // EJS(Embedded JavaScript) Görüntüleme motorunu aktifleştirdim
@@ -87,9 +88,24 @@ app.get("/", (request,response) => {
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Windowsta 1111 portunu kapatmak
+/*
+Terminali Yönetici olarak Aç
+
+# Çalışan portu gösteriyor
+netstat -aon | findstr :1111
+
+# TCP Protokolü için Portu Kapatma:
+netsh advfirewall firewall add rule name="Block TCP Port 1111" protocol=TCP dir=in localport=1111 action=block
+
+# UDP Protokolü için Portu Kapatma:
+netsh advfirewall firewall add rule name="Block UDP Port 1111" protocol=UDP dir=in localport=1111 action=block
+
+*/
+
 // Server Port 
 const port = 1111;
 app.listen(port, ()=>{
     console.log(`NodeJS Sunucusu ${port} portunda dinliyor http://localhost:${port}`);
-    
-})
+});
