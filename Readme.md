@@ -192,6 +192,55 @@ npm run nodemon_1
 ---
 
 
+##  compression
+```sh
+
+ compression:
+ npm install compression
+ Gzip : Verilerin sıkıştırılmasıyla performansı artırmak
+ ve ağ üzerinde sayfaya daha hızlı erişimi sağlar
+ Tüm Http cevaplarını sıkıştırarak gönderilmesini sağlar.
+const compression = require('compression');
+app.use(compression);
+
+```
+---
+
+
+##  compression
+```sh
+npm install express-rate-limit
+ Rate Limitind (İstek Sınırlamasını):
+ DDoS saldırlarına karşı korumayı sağlamak ve sistem performansını artırmak içindir.
+ Gelen istekleri sınırlayabiliriz.
+
+// Her 15 dakika içinde en fazla 100 istek atılabilinir.
+const rateLimit=require('express-rate-limit');
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 dakika
+    max: 100, // buy süre zarfında en fazla bu kadar isterk atabilirsiniz.
+    message: "İstek sayısı fazla yapıldı, lütfen biraz sonra tekrar deneyiniz"
+});
+
+app.use("/api/", limiter)
+
+```
+---
+
+
+##  compression
+```sh
+CORS
+npm install cors
+CORS (Cross-Origin Resource Sharing)
+Eğer API'niz başka portlardan da erişim sağlanacaksa bunu açmamız gerekiyor.
+ 
+const cors= require('cors');
+app.use(cors());
+```
+---
+
+
 ## Node JS Nedir ?
 ```sh
 NodeJS :
@@ -373,7 +422,7 @@ EJS'yi Node.js projenize şu şekilde dahil edebilirsiniz:
 - **Node.js ile Entegre**: Express.js gibi popüler Node.js çerçeveleriyle mükemmel bir şekilde entegre olabilir.
 
 EJS, basit dinamik HTML içerik oluşturma ihtiyacı olan projelerde oldukça kullanışlıdır ve Node.js uygulamalarıyla yaygın bir şekilde kullanılır.
-```
+
 ---
 
 ## Morgan Log
@@ -413,7 +462,7 @@ app.get('/', (req, res) => {
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
-```
+
 
 Bu kod ile gelen her istek, Morgan tarafından loglanır ve geliştiriciye daha fazla kontrol ve görünürlük sağlar.
 
@@ -423,7 +472,11 @@ Bu kod ile gelen her istek, Morgan tarafından loglanır ve geliştiriciye daha 
 - **Uygulama güvenliği**: Kötü niyetli istekleri veya anormal davranışları loglar üzerinden tespit etmek mümkündür.
 
 Morgan, Express.js gibi popüler Node.js çerçeveleri ile loglama işlemlerini basit ve verimli hale getirir.
-```
+
 ---
+
+
+
+
 
 
