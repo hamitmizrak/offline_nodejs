@@ -207,10 +207,10 @@ app.use(compression);
 ---
 
 
-##  compression
+##  Rate Limited
 ```sh
 npm install express-rate-limit
- Rate Limitind (İstek Sınırlamasını):
+ Rate Limited (İstek Sınırlamasını):
  DDoS saldırlarına karşı korumayı sağlamak ve sistem performansını artırmak içindir.
  Gelen istekleri sınırlayabiliriz.
 
@@ -228,7 +228,7 @@ app.use("/api/", limiter)
 ---
 
 
-##  compression
+##  CORS
 ```sh
 CORS
 npm install cors
@@ -237,6 +237,85 @@ Eğer API'niz başka portlardan da erişim sağlanacaksa bunu açmamız gerekiyo
  
 const cors= require('cors');
 app.use(cors());
+```
+---
+
+
+##  CSRF Koruması (Cross-Site Request Forgery)
+```sh
+npm install csurf
+const csrf = require("csurf");
+const csrfProtection = csrf({ cookie: true });
+
+app.use(csrfProtection);
+
+app.get("/form", csrfProtection, (req, res) => {
+  // CSRF token'ı form gönderiminde kullanmanız gerekecek
+  res.render("send", { csrfToken: req.csrfToken() });
+});
+
+
+```
+---
+
+
+##  HELMET
+```sh
+Helmet: Http başlıkalrını güvenli hale getirir ve yaygın saldırı vektörlerini azaltır
+
+npm install helmet
+
+const helmet = require("helmet");
+app.use(helmet());
+```
+---
+
+##  Mongo DB
+```sh
+
+npm install mongodb
+npm install -g mongodb
+
+username:  hamitmizrak
+password:  cNrT66n13oQYtkps
+
+mongodb+srv://hamitmizrak:cNrT66n13oQYtkps@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster
+
+
+
+```
+---
+
+##  MONGO İÇİN VERİ GÜVENLİĞİ (dotenv)
+```sh
+MongoDB kullanıcı adı ve şifresini doğrudan yazılmaz.
+Hassas verileri saklamak için .env dosyası üzerinden ilerlemeliyiz.
+
+DİKKATT: .env root dizinde olamlıdır.
+
+npm install dotenv
+
+.env
+MONGO_USERNAME=hamitmizrak
+MONGO_PASSWORD=cNrT66n13oQYtkps
+
+index.js
+require('dotenv').config();
+
+// Localhostta MongoDB yüklüyse)
+const databaseCloudUrlDotEnv = 
+`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster`;  
+
+
+
+
+```
+---
+
+
+##  CORS
+```sh
+
 ```
 ---
 
@@ -325,23 +404,6 @@ Npm bize hızlı kodlar yazmamız için gereken alt yapıyı sunar.
 ---
 
 
-
-
-##  Mongo DB
-```sh
-
-npm install mongodb
-npm install -g mongodb
-
-username:  hamitmizrak
-password:  cNrT66n13oQYtkps
-
-mongodb+srv://hamitmizrak:cNrT66n13oQYtkps@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster
-
-https://cloud.mongodb.com/v2/66db445daaa24671ea000150#/metrics/replicaSet/66db45178fd0f77237a36be8/explorer/test/mongoblogmodels/find
-
-```
----
 
 ##  EJS
 ```sh
@@ -480,5 +542,85 @@ Morgan, Express.js gibi popüler Node.js çerçeveleri ile loglama işlemlerini 
 
 
 
+## Npm Nedir
+```sh
+`winston` logger'ı, uygulamanızda hata ve bilgi loglarını düzgün bir şekilde yönetmek için kullanılır. Bu kodu genellikle uygulamanızın **`index.js`** veya **`server.js`** gibi ana giriş dosyasına eklemeniz gerekir. Logger, uygulamanızın başlangıcından itibaren tüm hataları ve bilgileri loglar.
 
+### 1. **Kurulum:**
+Öncelikle `winston` kütüphanesini yüklemeniz gerekiyor. Terminalde şu komutu çalıştırarak yükleyebilirsiniz:
+```bash
+npm install winston
+```
+
+### Winston
+### 1. **Install**
+npm install winston
+
+### 2. **index.js veya server.js Dosyasına Ekleme:**
+Logger kodunu projenizin başlangıç dosyasına ekleyin. Genellikle bu dosya `index.js` veya `server.js` olur. Aşağıdaki örnekte, `winston` logger kodu, `index.js` dosyasına eklenmiştir:
+
+```javascript => index.js
+const express = require("express");
+const mongoose = require("mongoose");
+const winston = require("winston"); // Winston logger'ı ekle
+
+const app = express();
+
+// Winston logger yapılandırması
+const logger = winston.createLogger({
+    level: "info",
+    format: winston.format.json(),
+    transports: [
+      new winston.transports.File({ filename: "winston_error.log", level: "error" }),
+      new winston.transports.File({ filename: "winston_combined.log" }),
+    ],
+  });
+  
+  if (process.env.NODE_ENV !== "production") {
+    logger.add(
+      new winston.transports.Console({
+        format: winston.format.simple(),
+      })
+    );
+  }
+// Logger kullanımı
+logger.info("Sunucu başlatılıyor...");
+
+// MongoDB bağlantısı örneği
+mongoose
+  .connect("mongodb://localhost:27017/mydb", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    logger.info("MongoDB bağlantısı başarılı.");
+  })
+  .catch((err) => {
+    logger.error("MongoDB bağlantı hatası:", err);
+  });
+
+// Sunucu başlatma
+const port = 3000;
+app.listen(port, () => {
+  logger.info(`Sunucu ${port} portunda çalışıyor.`);
+});
+```
+
+### 3. **Winston Logger'ın Kullanımı:**
+Yukarıdaki kodda `logger.info()` ve `logger.error()` kullanarak bilgi ve hata loglarını yönetebilirsiniz. Örneğin:
+
+- `logger.info("Sunucu başlatıldı")`: Bilgi mesajlarını loglar.
+- `logger.error("Bir hata oluştu")`: Hata mesajlarını loglar.
+
+Bu loglar:
+- `error.log`: Sadece hata seviyesindeki logları içerir.
+- `combined.log`: Tüm logları içerir.
+
+### 4. **Log Dosyalarını Kontrol Etme:**
+- `error.log` ve `combined.log` dosyaları, çalıştırdığınız dizinde otomatik olarak oluşturulur.
+- Uygulamanız çalışırken bu dosyalara logların yazıldığını göreceksiniz.
+
+Logger'ı hatalar, bilgi mesajları veya özel olaylar için kullanabilirsiniz.
+```
+---
 

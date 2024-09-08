@@ -15,11 +15,41 @@ const mongoose = require("mongoose");
 const csrf = require("csurf");
 const cookieParser = require("cookie-parser");
 
+// Winston: Hata bilgilerini ve bilgi loglarını düzgün ve MORGAN'A göre daha gelişmiştir.
+const winston = require("winston"); // Winston logger'ı ekle
+
+
+// Helmet Import
+const helmet = require("helmet");
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // bodyParser Import
 const bodyParser = require("body-parser");
 
+
 // App Import
 const app = express();
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Winston logger yapılandırması
+const logger = winston.createLogger({
+    level: "info",
+    format: winston.format.json(),
+    transports: [
+      new winston.transports.File({ filename: "winston_error.log", level: "error" }),
+      new winston.transports.File({ filename: "winston_combined.log" }),
+    ],
+  });
+  
+  if (process.env.NODE_ENV !== "production") {
+    logger.add(
+      new winston.transports.Console({
+        format: winston.format.simple(),
+      })
+    );
+  }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Mongo DB Bağlantısı
@@ -31,11 +61,19 @@ const app = express();
 const databaseLocalUrl = "mongodb://localhost:27017/blog";
 
 // Localhostta MongoDB yüklüyse)
+// 1.YOL
 const databaseCloudUrl =
   "mongodb+srv://hamitmizrak:cNrT66n13oQYtkps@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster";
 
+// 2.YOL
+require('dotenv').config();
+
+// Localhostta MongoDB yüklüyse)
+const databaseCloudUrlDotEnv = 
+`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster`;  
+
 // Local ve Cloud
-const dataUrl = [databaseLocalUrl, databaseCloudUrl];
+const dataUrl = [databaseLocalUrl, databaseCloudUrl,databaseCloudUrlDotEnv];
 
 // Connect
 // 1.YOL
@@ -43,6 +81,7 @@ const dataUrl = [databaseLocalUrl, databaseCloudUrl];
 
 // 2.YOL
 //mongoose.connect(`${databaseCloudUrl}`, {useNewUrlParser:true, useUnifiedTopology:true}) // Eski MongoDB sürümleride
+/*
 mongoose
   .connect(`${databaseCloudUrl}`)
   .then(() => {
@@ -51,8 +90,20 @@ mongoose
   .catch((err) => {
     console.error("Mongo DB Bağlantı Hatası", err);
   });
+*/
+  // 3.YOL 
+  mongoose
+  .connect(`${databaseCloudUrlDotEnv}`)
+  .then(() => {
+    console.log("Mongo DB Başarıyla Yüklendi");
+    logger.info("Mongo DB Başarıyla Yüklendi..."); //logger: Winston
+  })
+  .catch((err) => {
+    console.error("Mongo DB Bağlantı Hatası", err);
+  });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIDDLEWARE
 // Middleware'leri dahil et
 
 // app.use(bodyParser.urlencoded({ extended: true }));
@@ -147,6 +198,18 @@ app.use("/blog/", limiter);
 const cors = require("cors");
 app.use(cors());
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Helmet: Http başlıkalrını güvenli hale getirir ve yaygın saldırı vektörlerini azaltır
+//npm install helmet
+
+// const helmet = require("helmet");
+//app.use(helmet());
+ app.use(helmet.frameguard({ action: 'deny' })); // Clickjacking'e karşı koruma
+ app.use(helmet.xssFilter()); // XSS saldırılarına karşı koruma
+ app.use(helmet.noSniff()); // MIME sniffing koruması
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // CSRF
 /*
@@ -220,9 +283,13 @@ app.post("/", csrfProtection, (request, response) => {
 
   if (!request.body) {
     console.log("Boş gövde alındı.");
+    logger.info("Boş gövde alındı."); //logger: Winston
   } else {
     console.log(request.body);
     console.log("Dolu gövde alındı.");
+
+    logger.info(request.body); //logger: Winston
+    logger.info("Dolu gövde alındı."); //logger: Winston
   }
 
   const BlogModel = require("./models/mongoose_blog_models"); // Modeli ekleyin
@@ -232,10 +299,12 @@ app.post("/", csrfProtection, (request, response) => {
     .save()
     .then(() => {
       console.log("Blog başarıyla kaydedildi:", blogData);
+      logger.info("Blog başarıyla kaydedildi:", blogData); //logger: Winston
       response.send("CSRF ile blog başarıyla kaydedildi.");
     })
     .catch((err) => {
       console.log("Veritabanı hatası:", err);
+      logger.error("Veritabanı hatası:", err); //logger: Winston
       response.status(500).send("Veritabanı hatası oluştu.");
     });
 });
@@ -267,4 +336,5 @@ netsh advfirewall firewall add rule name="Block UDP Port 1111" protocol=UDP dir=
 const port = 1111;
 app.listen(port, () => {
   console.log(`Sunucu ${port} portunda çalışıyor http://localhost:${port}`);
+  logger.info(`Sunucu ${port} portunda çalışıyor http://localhost:${port}`); //logger: Winston
 });
