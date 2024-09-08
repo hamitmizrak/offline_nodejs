@@ -163,10 +163,10 @@ Kullanıcı browser üzerinden oturum açtığında ve kimlik doğrulama bilgile
 
 // Formu render eden rota ("/")
 app.get("/", csrfProtection, (request, response) => {
-  // İStek gövdesinde JSON(Javascript Object Notation) formatında veri göndereceğini belirtir.
-  response.setHeader("Content-Type", "application/json");
+  // İstek gövdesinde JSON(Javascript Object Notation) formatında veri göndereceğini belirtir.
+  //response.setHeader("Content-Type", "application/json");
   //response.setHeader("Content-Type", "text/plain"); // name Hamit surnameMızrak
-  //response.setHeader("Content-Type", "text/html");
+  response.setHeader("Content-Type", "text/html");
   //response.setHeader("Content-Type", "application/x-www-form-urlencoded"); // name=Hamit&surname=Mizrak
 
   // cache-control: Yanıtları hızlı sunmak için ve sunucya gereksiz istekleri azaltmak için
