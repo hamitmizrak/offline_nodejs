@@ -13,7 +13,7 @@ $(document).ready(function () {
     $("#blog-form")[0].reset();
   };
 
-  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Blog List
   function blogList() {
     $.ajax({
@@ -48,14 +48,16 @@ $(document).ready(function () {
     }); //end ajax
   } //end blogList
 
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Liste Function çağırmak
   blogList();
 
-  ////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // blog Ekleme
   $("#blog-form").on("submit", function (event) {
     // Browser'a otomatik olarak herhangi bir veri göndermesini kısıtkadım.
-     event.preventDefault(); //bunu kapatmazsam csrf çalışmıyordu
+    // DİKKATTTTT : Bunu kapatmazsam csrf çalışmıyordu
+    event.preventDefault();
 
     // Blog Form'da verileri almak için
     const blogDataCreate = {
@@ -64,10 +66,10 @@ $(document).ready(function () {
       content: $("#content").val(),
       author: $("#author").val(),
       tags: $("#tags").val(),
-      _csrf: $("input[name='_csrf']").val() // CSRF token'ı AJAX isteğine dahil ediyoruz
+      _csrf: $("input[name='_csrf']").val(), // CSRF token'ı AJAX isteğine dahil ediyoruz
     };
 
-    console.warn("sonuç:"+blogDataCreate._csrf); // csrf ekle
+    console.warn("sonuç:" + blogDataCreate._csrf); // csrf ekle
 
     // Aldığım verileri kaydetmek (AJAX)
     $.ajax({
@@ -89,7 +91,7 @@ $(document).ready(function () {
     }); //end submit ajax
   }); // end Blog Add submit
 
-  /////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Blog Güncelleme
   $("#blog-table tbody").on("click", ".edit-btn", function () {
     //alert("güncelleme");
@@ -142,7 +144,7 @@ $(document).ready(function () {
     } //end else
   }); //end Güncelleme
 
-  ////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Blog Silme
   // confirm
   $("#blog-table tbody").on("click", ".delete-btn", function () {

@@ -11,7 +11,7 @@ node index.js
 
 # 2.YOL
 # & = anlamı
-# node index.js komutunun çalıştıktan sonra terminali "bloklayarak" (kilitleyerek) diğer komutlara geçişi engellemesidir. 
+# node index.js komutunun çalıştıktan sonra terminali "bloklayarak" (kilitleyerek) diğer komutlara geçişi engellemesidir.
 # Yani, node index.js çalıştığında terminal bu süreçte bekler ve docker-compose up -d komutunu çalıştırmaz.
 # node index.js &
 
@@ -29,4 +29,3 @@ node index.js
 # 6.YOL Nodemon ile ayağa kaldır
 # q: terminal çıktısındaki çok detayı gösterme
 #npm run nodemon_q
-

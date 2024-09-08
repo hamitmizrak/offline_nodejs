@@ -37,14 +37,14 @@
     <!-- start codes -->
 
     <h1 class="text-center text-uppercase text-primary">Blog Sayfası</h1>
-    <p> <%= csrfToken %></p>
+    <p><%= csrfToken %></p>
 
     <!-- Blog Form -->
     <!-- <form id="blog-form"> -->
     <!-- CSRF (Cross-Site Request Forgery):  action,POST için eklendi -->
     <form action="/blog" method="POST" id="blog-form">
       <!-- CSRF (Cross-Site Request Forgery) -->
-      <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>" />
 
       <!-- BLOG HEADER -->
       <div class="form-group mb-3">
