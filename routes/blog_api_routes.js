@@ -42,12 +42,38 @@ const handleError = (err, response, message) => {
   response.status(400).json({ message });
 }; //end handleError
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // CREATE BLOG
 // POST isteği ile yeni bir blog datası oluşturuyoruz.
 // Gönderilen bu veriyi almak için request.body ile içeri aktarmış olacağız.
 // http://localhost:1111
 
+/**
+ * @swagger
+ * /blog:
+ *   post:
+ *     summary: Create a new blog
+ *     description: Adds a new blog to the collection
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               header:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               author:
+ *                 type: string
+ *               tags:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Successfully created new blog
+ */
 router.post("/", async (request, response) => {
   // Mongoose Blog Model Verileri Almak
   const create = new MongooseBlogModelApi({
@@ -81,6 +107,17 @@ router.post("/", async (request, response) => {
 // LIST BLOG
 // GET isteği ile mongodb üzerinden bütün verileri alacağız.
 // http://localhost:1111
+
+/**
+ * @swagger
+ * /blog:
+ *   get:
+ *     summary: Get all blogs
+ *     description: Retrieves a list of all blogs
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved list of blogs
+ */
 router.get("/", async (request, response) => {
   try {
     // MongoDB üzerinden get isteği attık
@@ -134,6 +171,53 @@ router.get("/", async (request, response) => {
 // PUT isteği ile mongodb üzerinden veri güncelleyeceğiz.
 // NOT: delete ve update işlemlerinde ID kullanılır.
 // http://localhost:1111/1
+
+/**
+ * @swagger
+ * /blog/{id}:
+ *   put:
+ *     summary: Bir blog yazısını güncelle
+ *     description: Verilen id ile bir blog yazısını MongoDB üzerinde günceller.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Güncellenecek blog yazısının id'si.
+ *         schema:
+ *           type: string
+ *       - in: body
+ *         name: Blog
+ *         description: Güncellenecek blog verileri.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - header
+ *             - content
+ *             - author
+ *             - tags
+ *           properties:
+ *             header:
+ *               type: string
+ *               example: "Yeni Blog Başlığı"
+ *             content:
+ *               type: string
+ *               example: "Bu blog yazısının içeriği güncellenmiştir."
+ *             author:
+ *               type: string
+ *               example: "Hamit Mızrak"
+ *             tags:
+ *               type: string
+ *               example: "nodejs, mongodb, update"
+ *     responses:
+ *       200:
+ *         description: Güncellenmiş blog verisi döndürülür.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       400:
+ *         description: Güncelleme sırasında hata oluştu.
+ */
 router.put("/:id", async (request, response) => {
   try {
     // MongoDB üzerinden id ile istek attık
@@ -162,6 +246,35 @@ router.put("/:id", async (request, response) => {
 // DELETE BLOG
 // DELETE isteği ile mongodb üzerinden id ile sileceğiz.
 // http://localhost:1111/1
+
+
+/**
+ * @swagger
+ * /blog/{id}:
+ *   delete:
+ *     summary: Bir blog yazısını sil
+ *     description: Verilen id ile bir blog yazısını MongoDB üzerinden siler.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Silinecek blog yazısının id'si.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Silme işlemi başarılı olduğunda mesaj döner.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "1 nolu id silindi"
+ *       400:
+ *         description: Silme işlemi sırasında hata oluştu.
+ */
 router.delete("/:id", async (request, response) => {
   try {
     // İlgili ID'i bul

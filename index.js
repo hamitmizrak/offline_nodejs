@@ -18,14 +18,16 @@ const cookieParser = require("cookie-parser");
 // Winston: Hata bilgilerini ve bilgi loglarını düzgün ve MORGAN'A göre daha gelişmiştir.
 const winston = require("winston"); // Winston logger'ı ekle
 
-
 // Helmet Import
 const helmet = require("helmet");
+
+// Swagger UI
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // bodyParser Import
 const bodyParser = require("body-parser");
-
 
 // App Import
 const app = express();
@@ -34,22 +36,24 @@ const app = express();
 
 // Winston logger yapılandırması
 const logger = winston.createLogger({
-    level: "info",
-    format: winston.format.json(),
-    transports: [
-      new winston.transports.File({ filename: "winston_error.log", level: "error" }),
-      new winston.transports.File({ filename: "winston_combined.log" }),
-    ],
-  });
-  
-  if (process.env.NODE_ENV !== "production") {
-    logger.add(
-      new winston.transports.Console({
-        format: winston.format.simple(),
-      })
-    );
-  }
+  level: "info",
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({
+      filename: "winston_error.log",
+      level: "error",
+    }),
+    new winston.transports.File({ filename: "winston_combined.log" }),
+  ],
+});
 
+if (process.env.NODE_ENV !== "production") {
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    })
+  );
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Mongo DB Bağlantısı
@@ -58,22 +62,27 @@ const logger = winston.createLogger({
 // mongodb+srv://hamitmizrak:cNrT66n13oQYtkps@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster
 
 // Localhostta MongoDB yüklüyse)
-const databaseLocalUrl = "mongodb://localhost:27017/blog";
+// Bu proje için docker-compose üzerinden 27017 porta sahip mongodb kurdum
+// 1.YOL (LOCALHOST)
+const databaseLocalDockerUrl = "mongodb://localhost:27017/blog";
 
-// Localhostta MongoDB yüklüyse)
-// 1.YOL
+// MongoDB Cloud (username,password)
+// 2.YOL
 const databaseCloudUrl =
   "mongodb+srv://hamitmizrak:cNrT66n13oQYtkps@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster";
 
-// 2.YOL
-require('dotenv').config();
-
+// MongoDB Cloud (.dotenv)
+// 3.YOL
+require("dotenv").config();
 // Localhostta MongoDB yüklüyse)
-const databaseCloudUrlDotEnv = 
-`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster`;  
+const databaseCloudUrlDotEnv = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster`;
 
 // Local ve Cloud
-const dataUrl = [databaseLocalUrl, databaseCloudUrl,databaseCloudUrlDotEnv];
+const dataUrl = [
+  databaseLocalDockerUrl,
+  databaseCloudUrl,
+  databaseCloudUrlDotEnv,
+];
 
 // Connect
 // 1.YOL
@@ -91,9 +100,9 @@ mongoose
     console.error("Mongo DB Bağlantı Hatası", err);
   });
 */
-  // 3.YOL 
-  mongoose
-  .connect(`${databaseCloudUrlDotEnv}`)
+// 3.YOL
+mongoose
+  .connect(`${databaseLocalDockerUrl}`)
   .then(() => {
     console.log("Mongo DB Başarıyla Yüklendi");
     logger.info("Mongo DB Başarıyla Yüklendi..."); //logger: Winston
@@ -101,6 +110,127 @@ mongoose
   .catch((err) => {
     console.error("Mongo DB Bağlantı Hatası", err);
   });
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// SWAGGER
+// http://localhost:1111/api-docs
+/*
+
+API'lerinizi daha iyi yönetmek ve test etmek için swagger kullanabilirsiniz.
+
+npm install swagger-jsdoc swagger-ui-express
+
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+// Swagger ayarları
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: "Blog API",
+      description: "Blog API yönetimi için dökümantasyon",
+      contact: {
+        name: "Developer"
+      },
+      servers: ["http://localhost:5555"]
+    }
+  },
+  apis: ["index.js", "./routes/*.js"], // API tanımları için dosyaları belirtin
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+*/
+
+// Authorize Geliyor
+/*
+const swaggerOptions = {
+    swaggerDefinition: {
+      info: {
+        title: "Blog API",
+        description: "Blog API yönetimi için dökümantasyon",
+        contact: {
+          name: "Developer"
+        },
+        servers: ["http://localhost:1111"]
+      }
+    },
+    apis: ["index.js", "./routes/blog_api_routes.js"], // API tanımları için dosyaları belirtin
+    //apis: ["index.js", "./routes/*.js"], // API tanımları için dosyaları belirtin
+  };
+*/
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Blog API",
+      description:
+        "Blog API yönetimi için dökümantasyon Author: Yüksek Bilgisayar Mühendisi Hamit Mızrak",
+        version: "1.0.0",
+      contact: {
+        name: "Developer",
+      },
+      servers: [
+        {
+            url:"http://localhost:1111",
+        },
+    ],
+    // Bearer authentication istemiyorsak securtiy kapat
+    },
+  },
+  apis: ["index.js", "./routes/blog_api_routes.js"], // API tanımları için dosyaları belirtin
+  //apis: ["index.js", "./routes/*.js"], // API tanımları için dosyaları belirtin
+};
+
+/*
+Dikkat: No operations defined in spec! Swagger dokümasntasyonları API rotalarını işlemleri doğru yazdık
+API dosyamızın blog_api.routes.js , Swagger taglarini (JSDoc) olmadığı için 
+
+LIST
+/**
+ * @swagger
+ * /blog:
+ *   get:
+ *     summary: Get all blogs
+ *     description: Retrieves a list of all blogs
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved list of blogs
+ */
+ 
+// POST
+/*
+ * @swagger
+ * /blog:
+ *   post:
+ *     summary: Create a new blog
+ *     description: Adds a new blog to the collection
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               header:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               author:
+ *                 type: string
+ *               tags:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Successfully created new blog
+ */
+
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+// http://localhost:1111/api-docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MIDDLEWARE
@@ -198,7 +328,6 @@ app.use("/blog/", limiter);
 const cors = require("cors");
 app.use(cors());
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Helmet: Http başlıkalrını güvenli hale getirir ve yaygın saldırı vektörlerini azaltır
@@ -206,9 +335,9 @@ app.use(cors());
 
 // const helmet = require("helmet");
 //app.use(helmet());
- app.use(helmet.frameguard({ action: 'deny' })); // Clickjacking'e karşı koruma
- app.use(helmet.xssFilter()); // XSS saldırılarına karşı koruma
- app.use(helmet.noSniff()); // MIME sniffing koruması
+app.use(helmet.frameguard({ action: "deny" })); // Clickjacking'e karşı koruma
+app.use(helmet.xssFilter()); // XSS saldırılarına karşı koruma
+app.use(helmet.noSniff()); // MIME sniffing koruması
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // CSRF

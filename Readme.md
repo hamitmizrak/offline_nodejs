@@ -540,6 +540,134 @@ Morgan, Express.js gibi popüler Node.js çerçeveleri ile loglama işlemlerini 
 ---
 
 
+## Swagger
+```sh
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// SWAGGER
+// http://localhost:1111/api-docs
+/*
+
+API'lerinizi daha iyi yönetmek ve test etmek için swagger kullanabilirsiniz.
+
+npm install swagger-jsdoc swagger-ui-express
+
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+// Swagger ayarları
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: "Blog API",
+      description: "Blog API yönetimi için dökümantasyon",
+      contact: {
+        name: "Developer"
+      },
+      servers: ["http://localhost:5555"]
+    }
+  },
+  apis: ["index.js", "./routes/*.js"], // API tanımları için dosyaları belirtin
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+*/
+
+// Authorize Geliyor
+/*
+const swaggerOptions = {
+    swaggerDefinition: {
+      info: {
+        title: "Blog API",
+        description: "Blog API yönetimi için dökümantasyon",
+        contact: {
+          name: "Developer"
+        },
+        servers: ["http://localhost:1111"]
+      }
+    },
+    apis: ["index.js", "./routes/blog_api_routes.js"], // API tanımları için dosyaları belirtin
+    //apis: ["index.js", "./routes/*.js"], // API tanımları için dosyaları belirtin
+  };
+*/
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Blog API",
+      description:
+        "Blog API yönetimi için dökümantasyon Author: Yüksek Bilgisayar Mühendisi Hamit Mızrak",
+        version: "1.0.0",
+      contact: {
+        name: "Developer",
+      },
+      servers: [
+        {
+            url:"http://localhost:1111",
+        },
+    ],
+    // Bearer authentication istemiyorsak securtiy kapat
+    },
+  },
+  apis: ["index.js", "./routes/blog_api_routes.js"], // API tanımları için dosyaları belirtin
+  //apis: ["index.js", "./routes/*.js"], // API tanımları için dosyaları belirtin
+};
+
+/*
+Dikkat: No operations defined in spec! Swagger dokümasntasyonları API rotalarını işlemleri doğru yazdık
+API dosyamızın blog_api.routes.js , Swagger taglarini (JSDoc) olmadığı için 
+
+LIST
+/**
+ * @swagger
+ * /blog:
+ *   get:
+ *     summary: Get all blogs
+ *     description: Retrieves a list of all blogs
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved list of blogs
+ */
+ 
+POST
+/*
+ * @swagger
+ * /blog:
+ *   post:
+ *     summary: Create a new blog
+ *     description: Adds a new blog to the collection
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               header:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               author:
+ *                 type: string
+ *               tags:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Successfully created new blog
+ */
+
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+// http://localhost:1111/api-docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+```
+---
+
+
+
 
 
 ## Npm Nedir
