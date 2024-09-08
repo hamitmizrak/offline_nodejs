@@ -151,7 +151,6 @@ router.get("/", async (request, response) => {
     //   }) // end map
     // ); //end viewCounter
     // Dönüş değeri
-    //
 
     response.status(200).json(formattedDateTurkish);
 
@@ -246,7 +245,6 @@ router.put("/:id", async (request, response) => {
 // DELETE BLOG
 // DELETE isteği ile mongodb üzerinden id ile sileceğiz.
 // http://localhost:1111/1
-
 
 /**
  * @swagger

@@ -21,10 +21,32 @@ git/github
 docker => Dockerfile
 docker => docker-compose.yml
 Rest API
-body-parser
-mongoose
-nodemon
 bashscript
+nodemon
+mongoose
+
+```
+---
+
+## Teknolojiler
+```sh
+body-parser
+compression
+cookie-parser
+cors
+csurf
+dotenv
+ejs
+express
+express-rate-limit
+helmet
+mongodb
+mongoose
+morgan
+swagger-jsdoc
+swagger-ui-express
+typescript
+winston
 
 nginx
 typescript
@@ -172,7 +194,6 @@ npm install typescript@5.5.4 --save
 
 npm install nodemon --save-dev
 
-
 -- GLOBAL --
 npm install express --save -g
 npm install nodemon --save-dev -g
@@ -305,20 +326,14 @@ require('dotenv').config();
 // Localhostta MongoDB yüklüyse)
 const databaseCloudUrlDotEnv = 
 `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@offlinenodejscluster.l3itd.mongodb.net/?retryWrites=true&w=majority&appName=OfflineNodejsCluster`;  
-
-
-
-
 ```
 ---
-
 
 ##  CORS
 ```sh
 
 ```
 ---
-
 
 ## Node JS Nedir ?
 ```sh
@@ -658,6 +673,80 @@ POST
  *         description: Successfully created new blog
  */
 
+/**
+ * @swagger
+ * /blog/{id}:
+ *   put:
+ *     summary: Bir blog yazısını güncelle
+ *     description: Verilen id ile bir blog yazısını MongoDB üzerinde günceller.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Güncellenecek blog yazısının id'si.
+ *         schema:
+ *           type: string
+ *       - in: body
+ *         name: Blog
+ *         description: Güncellenecek blog verileri.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - header
+ *             - content
+ *             - author
+ *             - tags
+ *           properties:
+ *             header:
+ *               type: string
+ *               example: "Yeni Blog Başlığı"
+ *             content:
+ *               type: string
+ *               example: "Bu blog yazısının içeriği güncellenmiştir."
+ *             author:
+ *               type: string
+ *               example: "Hamit Mızrak"
+ *             tags:
+ *               type: string
+ *               example: "nodejs, mongodb, update"
+ *     responses:
+ *       200:
+ *         description: Güncellenmiş blog verisi döndürülür.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       400:
+ *         description: Güncelleme sırasında hata oluştu.
+ */
+ 
+ /**
+ * @swagger
+ * /blog/{id}:
+ *   delete:
+ *     summary: Bir blog yazısını sil
+ *     description: Verilen id ile bir blog yazısını MongoDB üzerinden siler.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Silinecek blog yazısının id'si.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Silme işlemi başarılı olduğunda mesaj döner.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "1 nolu id silindi"
+ *       400:
+ *         description: Silme işlemi sırasında hata oluştu.
+ */
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 // http://localhost:1111/api-docs
@@ -665,9 +754,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 ```
 ---
-
-
-
 
 
 ## Npm Nedir

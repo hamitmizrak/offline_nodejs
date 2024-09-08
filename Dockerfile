@@ -21,7 +21,7 @@
 # Multi-Stage Build
 # @@@@@@@@@@@
 
-# Node.js tabanlı bir imaj kullanmalıyız. 
+# Node.js tabanlı bir imaj kullanmalıyız.
 # Dikkatttt : Örneğin node:14 kullanma bu proje için hata alırsın
 FROM node:16
 
@@ -45,7 +45,6 @@ RUN echo "Teknolojiler: $TECH"
 RUN echo "Version: $VERSION"
 RUN echo "Version: $VERSION"
 RUN echo "URL: http//$NODE_HOST:$NODE_PORT"
-
 
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # Dizin Oluştur

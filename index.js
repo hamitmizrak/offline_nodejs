@@ -90,7 +90,7 @@ const dataUrl = [
 
 // 2.YOL
 //mongoose.connect(`${databaseCloudUrl}`, {useNewUrlParser:true, useUnifiedTopology:true}) // Eski MongoDB sürümleride
-/*
+
 mongoose
   .connect(`${databaseCloudUrl}`)
   .then(() => {
@@ -99,8 +99,10 @@ mongoose
   .catch((err) => {
     console.error("Mongo DB Bağlantı Hatası", err);
   });
-*/
-// 3.YOL
+
+
+// 3.YOL (Docker Üzerindenn Mongo DB açılmamıştır)
+/*
 mongoose
   .connect(`${databaseLocalDockerUrl}`)
   .then(() => {
@@ -108,9 +110,10 @@ mongoose
     logger.info("Mongo DB Başarıyla Yüklendi..."); //logger: Winston
   })
   .catch((err) => {
+    logger.info("Mongo DB Docker Açılmadı"); //logger: Winston
     console.error("Mongo DB Bağlantı Hatası", err);
   });
-
+*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // SWAGGER
@@ -186,7 +189,7 @@ const swaggerOptions = {
 
 /*
 Dikkat: No operations defined in spec! Swagger dokümasntasyonları API rotalarını işlemleri doğru yazdık
-API dosyamızın blog_api.routes.js , Swagger taglarini (JSDoc) olmadığı için 
+API dosyamızın blog_api.routes.js , Swagger taglarini (JSDoc) olmadığı için
 
 LIST
 /**
@@ -199,7 +202,7 @@ LIST
  *       200:
  *         description: Successfully retrieved list of blogs
  */
- 
+
 // POST
 /*
  * @swagger
